@@ -31,9 +31,15 @@ public class MainWindow : Window {
         var view = new TreeView ();
         setup_treeview (view);
 
+        var swin = new ScrolledWindow(null, null);
+
+        swin.set_border_width(5);
+        swin.set_policy(PolicyType.AUTOMATIC, PolicyType.AUTOMATIC);
+        swin.add_with_viewport(view);
+
         var vbox = new Box (Orientation.VERTICAL, 0);
         vbox.pack_start (hbox, false, true, 4);
-        vbox.pack_start (view, true, true, 4);
+        vbox.pack_start (swin, true, true, 4);
 
         add (vbox);
     }
