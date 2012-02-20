@@ -2,7 +2,8 @@ using Gtk;
 
 public class MainWindow : Window {
 
-    public MainWindow () {
+    public MainWindow ()
+    {
         this.title = "Bamboo";
         this.window_position = WindowPosition.CENTER;
         set_default_size (800, 600);
@@ -27,13 +28,18 @@ public class MainWindow : Window {
         hbox.pack_start (categories  , false , true , 4);
         hbox.pack_start (open_button , false , true , 4);
 
+        var view = new TreeView ();
+        setup_treeview (view);
+
         var vbox = new Box (Orientation.VERTICAL, 0);
-        vbox.pack_start (hbox, false, true, 0);
+        vbox.pack_start (hbox, false, true, 4);
+        vbox.pack_start (view, true, true, 4);
 
         add (vbox);
     }
 
-    private void on_open_clicked () {
+    private void on_open_clicked ()
+    {
         var file_chooser = new FileChooserDialog ("Open File", this,  FileChooserAction.OPEN,
                                                                       Stock.CANCEL, ResponseType.CANCEL,
                                                                       Stock.ADD,    ResponseType.ACCEPT);
@@ -45,7 +51,25 @@ public class MainWindow : Window {
         file_chooser.destroy ();
     }
 
-    private void open_file (string filename) {
+    private void open_file (string filename)
+    {
         stderr.printf (filename);
+    }
+
+    private void setup_treeview (TreeView view)
+    {
+        var listmodel = new ListStore (4, typeof (string), typeof (string),  typeof (string), typeof (string));
+        view.set_model (listmodel);
+
+        view.insert_column_with_attributes (-1, "Title", new CellRendererText (), "text", 0);
+        view.insert_column_with_attributes (-1, "Category", new CellRendererText (), "text", 1);
+        view.insert_column_with_attributes (-1, "Last Read", new CellRendererText (), "text", 2, "foreground", 3);
+
+        TreeIter iter;
+
+        for (int i = 0; i < 250; i++) {
+          listmodel.append (out iter);
+          listmodel.set (iter, 0, @"Introduction to Burping $i", 1, "Burp", 2, "10/10/2011");
+        }
     }
 }
