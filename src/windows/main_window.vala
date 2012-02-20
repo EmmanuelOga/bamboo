@@ -15,7 +15,8 @@ public class MainWindow : Window {
         add (vbox);
     }
 
-    private Widget create_toolbar() {
+    private Widget create_toolbar()
+    {
         var label = new Label("");
         label.set_markup("<b>Search</b>");
 
@@ -53,7 +54,6 @@ public class MainWindow : Window {
     private Widget create_list()
     {
         var view = new TreeView ();
-
         var swin = new ScrolledWindow(null, null);
 
         swin.set_border_width(5);
@@ -64,13 +64,23 @@ public class MainWindow : Window {
         var listmodel = new ListStore (4, typeof (string), typeof (string),  typeof (string), typeof (string));
         view.set_model (listmodel);
 
-        view.insert_column_with_attributes (-1, "Title", new CellRendererText (), "text", 0);
-        view.insert_column_with_attributes (-1, "Category", new CellRendererText (), "text", 1);
+        view.insert_column_with_attributes (-1, "Title",     new CellRendererText (), "text", 0);
+        view.insert_column_with_attributes (-1, "Category",  new CellRendererText (), "text", 1);
         view.insert_column_with_attributes (-1, "Last Read", new CellRendererText (), "text", 2, "foreground", 3);
+
+        // Make columns sortable.
+        for (int i= 0; i < 3; i++)
+        {
+          var col = view.get_column(i);
+          col.set_sort_column_id (i);
+          col.set_resizable (true);
+          col.set_expand (true);
+        }
 
         TreeIter iter;
 
-        for (int i = 0; i < 250; i++) {
+        for (int i = 0; i < 250; i++)
+        {
           listmodel.append (out iter);
           listmodel.set (iter, 0, @"Introduction to Burping $i", 1, "Burp", 2, "10/10/2011");
         }
