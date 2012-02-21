@@ -3,6 +3,7 @@ using Gtk;
 public class MainWindow : Window {
 
     public Entry search = null;
+    public string last_query = "";
     public string current_query = "";
     public Regex current_regex = null;
 
@@ -68,33 +69,7 @@ public class MainWindow : Window {
         var listmodel = new ListStore (4, typeof (string), typeof (string),  typeof (string), typeof (string));
         var modelfilter = new TreeModelFilter(listmodel, null);
 
-        modelfilter.set_visible_func((model, iter) => {
-            if (this.current_query.length == 0) return true;
-
-            string title = "";
-            model.get(iter, 0, out title);
-
-            if (title.length == 0) return false;
-
-            return this.current_regex.match(this.current_regex);
-        });
-
-        this.search.changed.connect(() => {
-            message("Search for %s", this.search.get_text());
-
-            this.current_query = this.search.get_text();
-
-            if (this.current_query.length > 0)
-            {
-              this.current_regex = new Regex(this.current_query);
-            }
-            else
-            {
-              this.current_regex = null;
-            }
-
-            modelfilter.refilter();
-        });
+        setup_filtering(modelfilter);
 
         var modelsort = new TreeModelSort.with_model(modelfilter);
 
@@ -122,6 +97,53 @@ public class MainWindow : Window {
         }
 
         return swin;
+    }
+
+    private void setup_filtering(TreeModelFilter modelfilter)
+    {
+        modelfilter.set_visible_func((model, iter) => {
+            if (this.current_regex == null) return true;
+
+            string title;
+            model.get(iter, 0, out title);
+
+            if (title.length == 0) return false;
+
+            return this.current_regex.match(title);
+        });
+
+        var query_timeout = new TimeoutSource (500);
+
+        query_timeout.set_callback(() => {
+
+            this.current_query = this.search.get_text();
+
+            if (this.last_query != this.current_query)
+            {
+              if (this.current_query.length > 0 && this.current_query != this.last_query)
+              {
+                try
+                {
+                  this.current_regex = new Regex(this.current_query);
+                }
+                catch(GLib.RegexError e)
+                {
+                  this.current_regex = null;
+                }
+              }
+              else
+              {
+                this.current_regex = null;
+              }
+
+              this.last_query = this.current_query;
+
+              modelfilter.refilter();
+            }
+
+            return true;
+        });
+        query_timeout.attach(null);
     }
 
     private void open_file (string filename)
