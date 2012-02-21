@@ -78,7 +78,6 @@ namespace Bamboo {
             swin.set_policy(PolicyType.AUTOMATIC, PolicyType.AUTOMATIC);
             swin.add_with_viewport(view);
 
-
             this.listmodel = new ListStore (4, typeof (string), typeof (string),  typeof (string), typeof (string));
             var modelfilter = new TreeModelFilter(listmodel, null);
 
@@ -112,8 +111,6 @@ namespace Bamboo {
                 if (this.current_category != "All")
                 {
                     model.get(iter, 1, out category);
-
-                    debug(category);
 
                     if (this.current_category != category)
                     {
@@ -176,27 +173,30 @@ namespace Bamboo {
             this.listmodel.append (out iter);
             this.listmodel.set (iter, 0, title, 1, category, 2, last_read);
 
-            var existing = false;
-
-            this.categories.get_model().foreach((model, path, iter)=>{
-                string cat;
-
-                model.get(iter, 0, out cat);
-
-                if (cat == category) {
-                    existing = true;
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            });
-
-            if (!existing)
+            if (!has_category(category))
             {
                 this.categories.append_text(category);
             }
         }
+
+        // TODO use a Set, or better yet, write a custom Set backed TreeModel.
+        public bool has_category(string category)
+        {
+            string cat;
+            TreeIter iter;
+
+            var categories_model = this.categories.get_model();
+
+            bool existing = false;
+            bool iter_found = categories_model.get_iter_first(out iter);
+
+            while (iter_found && !existing) {
+                categories_model.get(iter, 0, out cat);
+                existing = cat == category;
+                iter_found = categories_model.iter_next(ref iter);
+            }
+            return existing;
+        }
+
     }
 }
