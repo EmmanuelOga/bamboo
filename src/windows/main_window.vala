@@ -2,6 +2,10 @@ using Gtk;
 
 public class MainWindow : Window {
 
+    public Entry search = null;
+    public string current_query = "";
+    public Regex current_regex = null;
+
     public MainWindow ()
     {
         this.title = "Bamboo";
@@ -20,7 +24,7 @@ public class MainWindow : Window {
         var label = new Label("");
         label.set_markup("<b>Filter</b>");
 
-        var search = new Entry();
+        this.search = new Entry();
 
         var open_button = new ToolButton.from_stock (Stock.ADD);
 
@@ -65,12 +69,31 @@ public class MainWindow : Window {
         var modelfilter = new TreeModelFilter(listmodel, null);
 
         modelfilter.set_visible_func((model, iter) => {
+            if (this.current_query.length == 0) return true;
+
             string title = "";
             model.get(iter, 0, out title);
 
-            if (title == null) return false;
+            if (title.length == 0) return false;
 
-            return /9/.match(title);
+            return this.current_regex.match(this.current_regex);
+        });
+
+        this.search.changed.connect(() => {
+            message("Search for %s", this.search.get_text());
+
+            this.current_query = this.search.get_text();
+
+            if (this.current_query.length > 0)
+            {
+              this.current_regex = new Regex(this.current_query);
+            }
+            else
+            {
+              this.current_regex = null;
+            }
+
+            modelfilter.refilter();
         });
 
         var modelsort = new TreeModelSort.with_model(modelfilter);
