@@ -7,7 +7,8 @@ conf = Ninja::Config.new do |c|
   c.src_glob = "src/**/*.vala"
   c.out_path = "_obj"
   c.vala_package_names = %w[gtk+-3.0]
-  c.binary_name = "main"
+  c.cc_flags = %w[-O3]
+  c.binary_name = "bamboo"
 end
 
 Ninja::Build.new(conf).configure!($stdout)
