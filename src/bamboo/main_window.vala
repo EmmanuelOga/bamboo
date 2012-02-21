@@ -12,6 +12,8 @@ namespace Bamboo {
         public string current_query = "";
         public Regex current_regex = null;
 
+        public ListStore listmodel;
+
         public MainWindow ()
         {
             this.title = "Bamboo";
@@ -48,9 +50,8 @@ namespace Bamboo {
             });
 
             this.categories = new ComboBoxText();
-            categories.append_text("All");
-            categories.append_text("None");
-            categories.set_active(0);
+            this.categories.append_text("All");
+            this.categories.set_active(0);
 
             this.previous_category = this.current_category = "All";
 
@@ -78,7 +79,7 @@ namespace Bamboo {
             swin.add_with_viewport(view);
 
 
-            var listmodel = new ListStore (4, typeof (string), typeof (string),  typeof (string), typeof (string));
+            this.listmodel = new ListStore (4, typeof (string), typeof (string),  typeof (string), typeof (string));
             var modelfilter = new TreeModelFilter(listmodel, null);
 
             setup_filtering(modelfilter);
@@ -89,7 +90,7 @@ namespace Bamboo {
 
             view.insert_column_with_attributes (-1, "Title",     new CellRendererText (), "text", 0);
             view.insert_column_with_attributes (-1, "Category",  new CellRendererText (), "text", 1);
-            view.insert_column_with_attributes (-1, "Last Read", new CellRendererText (), "text", 2, "foreground", 3);
+            view.insert_column_with_attributes (-1, "Last Read", new CellRendererText (), "text", 2);
 
             // Make columns sortable.
             for (int i= 0; i < 3; i++)
@@ -100,27 +101,28 @@ namespace Bamboo {
               col.set_expand (true);
             }
 
-            TreeIter iter;
-
-            for (int i = 0; i < 250; i++)
-            {
-              listmodel.append (out iter);
-              listmodel.set (iter, 0, @"Introduction to Burping $i", 1, "Burp", 2, "10/10/2011");
-            }
-
             return swin;
         }
 
         private void setup_filtering(TreeModelFilter modelfilter)
         {
             modelfilter.set_visible_func((model, iter) => {
-                if (this.current_category != "All") {
-                  return false;
+                string category, title;
+
+                if (this.current_category != "All")
+                {
+                    model.get(iter, 1, out category);
+
+                    debug(category);
+
+                    if (this.current_category != category)
+                    {
+                        return false;
+                    }
                 }
 
                 if (this.current_regex == null) return true;
 
-                string title;
                 model.get(iter, 0, out title);
 
                 if (title.length == 0) return false;
@@ -166,6 +168,35 @@ namespace Bamboo {
         private void open_file (string filename)
         {
             stderr.printf (filename);
+        }
+
+        public void insert_row(string title, string category, string last_read)
+        {
+            TreeIter iter;
+            this.listmodel.append (out iter);
+            this.listmodel.set (iter, 0, title, 1, category, 2, last_read);
+
+            var existing = false;
+
+            this.categories.get_model().foreach((model, path, iter)=>{
+                string cat;
+
+                model.get(iter, 0, out cat);
+
+                if (cat == category) {
+                    existing = true;
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            });
+
+            if (!existing)
+            {
+                this.categories.append_text(category);
+            }
         }
     }
 }
