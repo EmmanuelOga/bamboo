@@ -1,155 +1,171 @@
 using Gtk;
 
 namespace Bamboo {
-  public class MainWindow : Window {
+    public class MainWindow : Window {
 
-      public Entry search = null;
-      public string last_query = "";
-      public string current_query = "";
-      public Regex current_regex = null;
+        public ComboBoxText categories;
+        public string current_category = "";
+        public string previous_category = "";
 
-      public MainWindow ()
-      {
-          this.title = "Bamboo";
-          this.window_position = WindowPosition.CENTER;
-          set_default_size (800, 600);
+        public Entry search = null;
+        public string last_query = "";
+        public string current_query = "";
+        public Regex current_regex = null;
 
-          var vbox = new Box (Orientation.VERTICAL, 0);
-          vbox.pack_start (create_controls(), false, true, 4);
-          vbox.pack_start (create_list(), true, true, 4);
+        public MainWindow ()
+        {
+            this.title = "Bamboo";
+            this.window_position = WindowPosition.CENTER;
+            set_default_size (800, 600);
 
-          add (vbox);
-      }
+            var vbox = new Box (Orientation.VERTICAL, 0);
+            vbox.pack_start (create_controls(), false, true, 4);
+            vbox.pack_start (create_list(), true, true, 4);
 
-      private Widget create_controls()
-      {
-          var label = new Label("");
-          label.set_markup("<b>Filter</b>");
+            add (vbox);
+        }
 
-          this.search = new Entry();
+        private Widget create_controls()
+        {
+            var label = new Label("");
+            label.set_markup("<b>Filter</b>");
 
-          var open_button = new ToolButton.from_stock (Stock.ADD);
+            this.search = new Entry();
 
-          open_button.is_important = true;
-          open_button.clicked.connect (() => {
-              var file_chooser = new FileChooserDialog ("Open File", this,  FileChooserAction.OPEN,
-                                                                            Stock.CANCEL, ResponseType.CANCEL,
-                                                                            Stock.ADD,    ResponseType.ACCEPT);
+            var open_button = new ToolButton.from_stock (Stock.ADD);
 
-              if (file_chooser.run () == ResponseType.ACCEPT) {
-                  open_file (file_chooser.get_filename ());
-              }
+            open_button.is_important = true;
+            open_button.clicked.connect (() => {
 
-              file_chooser.destroy ();
-          });
+                var file_chooser = new FileChooserDialog ("Open File", this,  FileChooserAction.OPEN,
+                                                                              Stock.CANCEL, ResponseType.CANCEL,
+                                                                              Stock.ADD,    ResponseType.ACCEPT);
+                if (file_chooser.run () == ResponseType.ACCEPT) {
+                    open_file (file_chooser.get_filename ());
+                }
 
-          var categories = new ComboBoxText();
-          categories.append_text("All");
-          categories.set_active(0);
+                file_chooser.destroy ();
+            });
 
-          var hbox = new Box (Orientation.HORIZONTAL, 0);
+            this.categories = new ComboBoxText();
+            categories.append_text("All");
+            categories.append_text("None");
+            categories.set_active(0);
 
-          hbox.pack_start (label       , false , true , 4);
-          hbox.pack_start (search      , true  , true , 4);
-          hbox.pack_start (categories  , false , true , 4);
-          hbox.pack_start (open_button , false , true , 4);
+            this.previous_category = this.current_category = "All";
 
-          return hbox;
-      }
+            this.categories.changed.connect(() => {
+                this.current_category = categories.get_active_text();
+            });
 
-      private Widget create_list()
-      {
-          var view = new TreeView ();
-          var swin = new ScrolledWindow(null, null);
+            var hbox = new Box (Orientation.HORIZONTAL, 0);
 
-          swin.set_border_width(5);
-          swin.set_policy(PolicyType.AUTOMATIC, PolicyType.AUTOMATIC);
-          swin.add_with_viewport(view);
+            hbox.pack_start (label       , false , true , 4);
+            hbox.pack_start (search      , true  , true , 4);
+            hbox.pack_start (categories  , false , true , 4);
+            hbox.pack_start (open_button , false , true , 4);
+
+            return hbox;
+        }
+
+        private Widget create_list()
+        {
+            var view = new TreeView ();
+            var swin = new ScrolledWindow(null, null);
+
+            swin.set_border_width(5);
+            swin.set_policy(PolicyType.AUTOMATIC, PolicyType.AUTOMATIC);
+            swin.add_with_viewport(view);
 
 
-          var listmodel = new ListStore (4, typeof (string), typeof (string),  typeof (string), typeof (string));
-          var modelfilter = new TreeModelFilter(listmodel, null);
+            var listmodel = new ListStore (4, typeof (string), typeof (string),  typeof (string), typeof (string));
+            var modelfilter = new TreeModelFilter(listmodel, null);
 
-          setup_filtering(modelfilter);
+            setup_filtering(modelfilter);
 
-          var modelsort = new TreeModelSort.with_model(modelfilter);
+            var modelsort = new TreeModelSort.with_model(modelfilter);
 
-          view.set_model (modelsort);
+            view.set_model (modelsort);
 
-          view.insert_column_with_attributes (-1, "Title",     new CellRendererText (), "text", 0);
-          view.insert_column_with_attributes (-1, "Category",  new CellRendererText (), "text", 1);
-          view.insert_column_with_attributes (-1, "Last Read", new CellRendererText (), "text", 2, "foreground", 3);
+            view.insert_column_with_attributes (-1, "Title",     new CellRendererText (), "text", 0);
+            view.insert_column_with_attributes (-1, "Category",  new CellRendererText (), "text", 1);
+            view.insert_column_with_attributes (-1, "Last Read", new CellRendererText (), "text", 2, "foreground", 3);
 
-          // Make columns sortable.
-          for (int i= 0; i < 3; i++)
-          {
-            var col = view.get_column(i);
-            col.set_sort_column_id (i);
-            col.set_resizable (true);
-            col.set_expand (true);
-          }
+            // Make columns sortable.
+            for (int i= 0; i < 3; i++)
+            {
+              var col = view.get_column(i);
+              col.set_sort_column_id (i);
+              col.set_resizable (true);
+              col.set_expand (true);
+            }
 
-          TreeIter iter;
+            TreeIter iter;
 
-          for (int i = 0; i < 250; i++)
-          {
-            listmodel.append (out iter);
-            listmodel.set (iter, 0, @"Introduction to Burping $i", 1, "Burp", 2, "10/10/2011");
-          }
+            for (int i = 0; i < 250; i++)
+            {
+              listmodel.append (out iter);
+              listmodel.set (iter, 0, @"Introduction to Burping $i", 1, "Burp", 2, "10/10/2011");
+            }
 
-          return swin;
-      }
+            return swin;
+        }
 
-      private void setup_filtering(TreeModelFilter modelfilter)
-      {
-          modelfilter.set_visible_func((model, iter) => {
-              if (this.current_regex == null) return true;
+        private void setup_filtering(TreeModelFilter modelfilter)
+        {
+            modelfilter.set_visible_func((model, iter) => {
+                if (this.current_category != "All") {
+                  return false;
+                }
 
-              string title;
-              model.get(iter, 0, out title);
+                if (this.current_regex == null) return true;
 
-              if (title.length == 0) return false;
+                string title;
+                model.get(iter, 0, out title);
 
-              return this.current_regex.match(title);
-          });
+                if (title.length == 0) return false;
 
-          var query_timeout = new TimeoutSource (500);
+                return this.current_regex.match(title);
+            });
 
-          query_timeout.set_callback(() => {
+            var query_timeout = new TimeoutSource (500);
 
-              this.current_query = this.search.get_text();
+            query_timeout.set_callback(() => {
 
-              if (this.last_query != this.current_query)
-              {
-                if (this.current_query.length > 0 && this.current_query != this.last_query)
+                this.current_query = this.search.get_text();
+
+                if ((this.previous_category != this.current_category) || (this.last_query != this.current_query))
                 {
-                  try
+                  if (this.current_query.length > 0 && this.current_query != this.last_query)
                   {
-                    this.current_regex = new Regex(this.current_query);
+                    try
+                    {
+                      this.current_regex = new Regex(this.current_query);
+                    }
+                    catch(GLib.RegexError e)
+                    {
+                      this.current_regex = null;
+                    }
                   }
-                  catch(GLib.RegexError e)
+                  else
                   {
                     this.current_regex = null;
                   }
+
+                  this.previous_category = this.current_category;
+                  this.last_query = this.current_query;
+
+                  modelfilter.refilter();
                 }
-                else
-                {
-                  this.current_regex = null;
-                }
 
-                this.last_query = this.current_query;
+                return true;
+            });
+            query_timeout.attach(null);
+        }
 
-                modelfilter.refilter();
-              }
-
-              return true;
-          });
-          query_timeout.attach(null);
-      }
-
-      private void open_file (string filename)
-      {
-          stderr.printf (filename);
-      }
-  }
+        private void open_file (string filename)
+        {
+            stderr.printf (filename);
+        }
+    }
 }
