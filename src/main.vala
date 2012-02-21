@@ -3,7 +3,7 @@ using Gtk;
 int main (string[] args) {
     Gtk.init (ref args);
 
-    var window = new MainWindow ();
+    var window = new Bamboo.MainWindow ();
     window.destroy.connect (Gtk.main_quit);
     window.show_all ();
 
