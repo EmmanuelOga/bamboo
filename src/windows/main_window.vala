@@ -18,7 +18,7 @@ public class MainWindow : Window {
     private Widget create_toolbar()
     {
         var label = new Label("");
-        label.set_markup("<b>Search</b>");
+        label.set_markup("<b>Filter</b>");
 
         var search = new Entry();
 
@@ -62,7 +62,20 @@ public class MainWindow : Window {
 
 
         var listmodel = new ListStore (4, typeof (string), typeof (string),  typeof (string), typeof (string));
-        view.set_model (listmodel);
+        var modelfilter = new TreeModelFilter(listmodel, null);
+
+        modelfilter.set_visible_func((model, iter) => {
+            string title = "";
+            model.get(iter, 0, out title);
+
+            if (title == null) return false;
+
+            return /9/.match(title);
+        });
+
+        var modelsort = new TreeModelSort.with_model(modelfilter);
+
+        view.set_model (modelsort);
 
         view.insert_column_with_attributes (-1, "Title",     new CellRendererText (), "text", 0);
         view.insert_column_with_attributes (-1, "Category",  new CellRendererText (), "text", 1);
