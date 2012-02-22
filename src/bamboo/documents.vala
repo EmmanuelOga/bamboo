@@ -21,8 +21,8 @@ namespace Bamboo {
         {
             this.main_window = main_window;
             this.view = new Box (Orientation.VERTICAL, 0);
-            view.pack_start (create_controls(), false, true, 4);
-            view.pack_start (create_list(), true, true, 4);
+            this.view.pack_start (create_controls(), false, true, 4);
+            this.view.pack_start (create_list(), true, true, 4);
         }
 
         private Widget create_controls()
@@ -69,12 +69,14 @@ namespace Bamboo {
 
         private Widget create_list()
         {
-            var view = new TreeView ();
+            var treeview = new TreeView ();
             var swin = new ScrolledWindow(null, null);
+
+            treeview.fixed_height_mode = true;
 
             swin.set_border_width(5);
             swin.set_policy(PolicyType.AUTOMATIC, PolicyType.AUTOMATIC);
-            swin.add_with_viewport(view);
+            swin.add(treeview);
 
             this.listmodel = new ListStore (4, typeof (string), typeof (string),  typeof (string), typeof (string));
             var modelfilter = new TreeModelFilter(listmodel, null);
@@ -83,16 +85,16 @@ namespace Bamboo {
 
             var modelsort = new TreeModelSort.with_model(modelfilter);
 
-            view.set_model (modelsort);
+            treeview.set_model (modelsort);
 
-            view.insert_column_with_attributes (-1, "Title",     new CellRendererText (), "text", 0);
-            view.insert_column_with_attributes (-1, "Category",  new CellRendererText (), "text", 1);
-            view.insert_column_with_attributes (-1, "Last Read", new CellRendererText (), "text", 2);
+            treeview.insert_column_with_attributes (-1, "Title",     new CellRendererText (), "text", 0);
+            treeview.insert_column_with_attributes (-1, "Category",  new CellRendererText (), "text", 1);
+            treeview.insert_column_with_attributes (-1, "Last Read", new CellRendererText (), "text", 2);
 
             // Make columns sortable.
             for (int i= 0; i < 3; i++)
             {
-              var col = view.get_column(i);
+              var col = treeview.get_column(i);
               col.set_sort_column_id (i);
               col.set_resizable (true);
               col.set_expand (true);
