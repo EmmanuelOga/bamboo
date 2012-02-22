@@ -1,7 +1,7 @@
 using Gtk;
 
 namespace Bamboo {
-    public class DocumentsWindow : Window {
+    public class Documents {
 
         public ComboBoxText categories;
         public string current_category = "";
@@ -13,18 +13,16 @@ namespace Bamboo {
         public Regex current_regex = null;
 
         public ListStore listmodel;
+        public Gtk.Window main_window;
 
-        public DocumentsWindow ()
+        public Box view;
+
+        public Documents (Gtk.Window main_window)
         {
-            this.title = "Bamboo";
-            this.window_position = WindowPosition.CENTER;
-            set_default_size (800, 600);
-
-            var vbox = new Box (Orientation.VERTICAL, 0);
-            vbox.pack_start (create_controls(), false, true, 4);
-            vbox.pack_start (create_list(), true, true, 4);
-
-            add (vbox);
+            this.main_window = main_window;
+            this.view = new Box (Orientation.VERTICAL, 0);
+            view.pack_start (create_controls(), false, true, 4);
+            view.pack_start (create_list(), true, true, 4);
         }
 
         private Widget create_controls()
@@ -39,9 +37,9 @@ namespace Bamboo {
             open_button.is_important = true;
             open_button.clicked.connect (() => {
 
-                var file_chooser = new FileChooserDialog ("Open File", this,  FileChooserAction.OPEN,
-                                                                              Stock.CANCEL, ResponseType.CANCEL,
-                                                                              Stock.ADD,    ResponseType.ACCEPT);
+                var file_chooser = new FileChooserDialog ("Open File", main_window,  FileChooserAction.OPEN,
+                                                                                     Stock.CANCEL, ResponseType.CANCEL,
+                                                                                     Stock.ADD,    ResponseType.ACCEPT);
                 if (file_chooser.run () == ResponseType.ACCEPT) {
                     open_file (file_chooser.get_filename ());
                 }

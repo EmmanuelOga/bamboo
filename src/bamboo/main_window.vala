@@ -2,17 +2,29 @@ using Gtk;
 
 namespace Bamboo {
     public class MainWindow : Window {
+
+        public Gtk.MenuBar    menubar;
+        public Gtk.AccelGroup accelgroup;
+        public Gtk.Notebook   notebook;
+
         public MainWindow() {
             this.title = "Bamboo";
             this.window_position = WindowPosition.CENTER;
             set_default_size (800, 600);
-            setup_menues();
+
+            var vbox = new Box (Orientation.VERTICAL, 0);
+            vbox.pack_start (create_menubar(), false, true, 4);
+            vbox.pack_start (create_notebook(), true, true, 4);
+
+            add (vbox);
+
+            add_accel_group(this.accelgroup);
         }
 
-        public void setup_menues()
+        private Gtk.MenuBar create_menubar()
         {
-            var group = new AccelGroup ();
-            var menubar = new MenuBar ();
+            this.accelgroup = new Gtk.AccelGroup ();
+            this.menubar = new Gtk.MenuBar ();
 
             var file = new Gtk.MenuItem.with_mnemonic("_File");
             var help = new Gtk.MenuItem.with_mnemonic("_Help");
@@ -27,9 +39,9 @@ namespace Bamboo {
             menubar.append(help);
 
             /* Create the File menu content. */
-            var inew = new Gtk.ImageMenuItem.from_stock(Stock.NEW, group);
-            var open = new Gtk.ImageMenuItem.from_stock(Stock.OPEN, group);
-            var quit = new Gtk.ImageMenuItem.from_stock(Stock.QUIT, group);
+            var inew = new Gtk.ImageMenuItem.from_stock(Stock.NEW,  accelgroup);
+            var open = new Gtk.ImageMenuItem.from_stock(Stock.OPEN, accelgroup);
+            var quit = new Gtk.ImageMenuItem.from_stock(Stock.QUIT, accelgroup);
 
             quit.activate.connect(Gtk.main_quit);
 
@@ -38,14 +50,26 @@ namespace Bamboo {
             filemenu.append(quit);
 
             /* Create the Help menu content. */
-            var contents = new Gtk.ImageMenuItem.from_stock(Stock.HELP, group);
-            var about    = new Gtk.ImageMenuItem.from_stock(Stock.ABOUT, group);
+            var contents = new Gtk.ImageMenuItem.from_stock(Stock.HELP,  accelgroup);
+            var about    = new Gtk.ImageMenuItem.from_stock(Stock.ABOUT, accelgroup);
 
             helpmenu.append(contents);
             helpmenu.append(about);
 
-            add(menubar);
-            add_accel_group(group);
+            return this.menubar;
+        }
+
+        private Gtk.Notebook create_notebook()
+        {
+           this.notebook = new Gtk.Notebook();
+           this.notebook.set_scrollable(true);
+           return this.notebook;
+        }
+
+        public void append_page(string title, Gtk.Widget widget)
+        {
+            var label = new Gtk.Label(title);
+            this.notebook.append_page(widget, label);
         }
     }
 }
