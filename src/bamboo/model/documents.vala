@@ -4,16 +4,12 @@ namespace Bamboo.Model
 {
     public class Documents
     {
-        public ListStore list;
+        public ListStore       list;
         public TreeModelFilter filtered;
-        public TreeModelSort sorted;
+        public TreeModelSort   sorted;
 
         public string current_category;
         public string previous_category;
-        public string current_query;
-        public string previous_query;
-
-        public Regex current_regex;
 
         public Gee.HashSet<string> categories;
 
@@ -34,30 +30,21 @@ namespace Bamboo.Model
                     if (this.current_category != category) return false;
                 }
 
-                if (this.current_regex == null) return true;
+                if (this._current_regex == null) return true;
 
                 string title;
                 model.get(iter, 0, out title);
                 if (title.length == 0) return false;
-                return this.current_regex.match(title);
+                return this._current_regex.match(title);
             });
         }
 
         public void update_filtering()
         {
-            if ((this.previous_category != this.current_category) || (this.previous_query != this.current_query))
+            if ((this.previous_category != this.current_category) || (this._previous_query != this._current_query))
             {
-                if (this.current_query.length > 0 && this.current_query != this.previous_query)
-                {
-                  try { this.current_regex = new Regex(this.current_query); } catch(GLib.RegexError e) { this.current_regex = null; }
-                }
-                else
-                {
-                  this.current_regex = null;
-                }
-
                 this.previous_category = this.current_category;
-                this.previous_query = this.current_query;
+                this._previous_query = this._current_query;
 
                 filtered.refilter();
             }
@@ -82,5 +69,25 @@ namespace Bamboo.Model
         }
 
         public signal void category_added(string category);
+
+        private Regex _current_regex;
+        private string _current_query;
+        private string _previous_query;
+
+        public string current_query {
+            get { return _current_query; }
+            set {
+                _previous_query = _current_query;
+                _current_query = value;
+                try
+                {
+                    this._current_regex = new Regex(value);
+                }
+                catch(GLib.RegexError e)
+                {
+                    this._current_regex = null;
+                }
+            }
+        }
     }
 }
