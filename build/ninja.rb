@@ -1,5 +1,5 @@
 module Ninja
-  class Config < Struct.new(:base_path, :src_glob, :out_path, :vapi_paths, :vala_package_names, :binary_name, :cc_flags)
+  class Config < Struct.new(:base_path, :src_glob, :out_path, :vapi_paths, :vala_package_names, :binary_name, :cc_flags, :valac_flags)
     def initialize
       super; yield self
     end
@@ -135,7 +135,7 @@ module Ninja
         out.puts "rule vala_to_c"
         out.puts "    description = valac compilation to .c files"
         out.puts "    restat = true"
-        out.puts "    command = valac #{conf.vala_package_params} -C $in -d #{conf.out_path} $vapis"
+        out.puts "    command = valac #{conf.valac_flags.join(" ")} #{conf.vala_package_params} -C $in -d #{conf.out_path} $vapis"
 
         conf.each_path do |inpath|
           outpath = inpath.relative_to_out_path.with_extension("c")
@@ -161,7 +161,7 @@ module Ninja
 
         out.puts "rule ccobj"
         out.puts "    description = cc binary object files"
-        out.puts "    command = cc #{conf.cc_flags.join(" ")} -MMD -MF $out.d -c #{conf.pkg_config(:cflags)} $in -o $out"
+        out.puts "    command = cc #{conf.cc_flags.join(" ")} -MMD -MF $out.d -c #{conf.pkg_config(:cflags)} #{conf.pkg_config(:libs)} $in -o $out"
         out.puts "    depfile = $out.d\n\n"
 
         conf.each_path do |inpath|
@@ -183,7 +183,7 @@ module Ninja
 
         out.puts "rule ccbin"
         out.puts "    description = cc main binary executable"
-        out.puts "    command = cc #{conf.cc_flags.join(" ")} #{conf.pkg_config(:libs)} $in -o $out\n\n"
+        out.puts "    command = cc #{conf.cc_flags.join(" ")} #{conf.pkg_config(:cflags)} #{conf.pkg_config(:libs)} $in -o $out\n\n"
 
         out.puts "build #{conf.binary_name}: ccbin #{conf.objects.join(" ")} | #{conf.objects.join(" ")}"
       end

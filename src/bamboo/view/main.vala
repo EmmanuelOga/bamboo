@@ -1,13 +1,13 @@
 using Gtk;
 
-namespace Bamboo {
-    public class MainWindow : Window {
+namespace Bamboo.View {
+    public class Main : Window {
 
         public Gtk.MenuBar    menubar;
         public Gtk.AccelGroup accelgroup;
         public Gtk.Notebook   notebook;
 
-        public MainWindow() {
+        public Main() {
             this.title = "Bamboo";
             this.window_position = WindowPosition.CENTER;
             set_default_size (800, 600);
@@ -19,6 +19,8 @@ namespace Bamboo {
             add (vbox);
 
             add_accel_group(this.accelgroup);
+
+            destroy.connect (Gtk.main_quit);
         }
 
         private Gtk.MenuBar create_menubar()
