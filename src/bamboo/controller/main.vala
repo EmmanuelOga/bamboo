@@ -1,12 +1,15 @@
 using Gtk;
 
-namespace Bamboo.Controller {
-    public class Main {
+namespace Bamboo.Controller
+{
+    public class Main
+    {
 
         public Bamboo.View.Main view;
         public Bamboo.Controller.Documents documents;
 
-        public Main() {
+        public Main()
+        {
             this.view = new Bamboo.View.Main ();
             this.documents = new Bamboo.Controller.Documents (this);
         }

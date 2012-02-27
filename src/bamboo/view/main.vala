@@ -1,13 +1,16 @@
 using Gtk;
 
-namespace Bamboo.View {
-    public class Main : Window {
+namespace Bamboo.View
+{
+    public class Main : Window
+    {
 
         public Gtk.MenuBar    menubar;
         public Gtk.AccelGroup accelgroup;
         public Gtk.Notebook   notebook;
 
-        public Main() {
+        public Main()
+        {
             this.title = "Bamboo";
             this.window_position = WindowPosition.CENTER;
             set_default_size (800, 600);

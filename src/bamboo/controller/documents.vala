@@ -1,7 +1,9 @@
 using Gtk;
 
-namespace Bamboo.Controller {
-    public class Documents {
+namespace Bamboo.Controller
+{
+    public class Documents
+    {
 
         public Bamboo.Controller.Main main_controller;
         public Bamboo.Model.Documents documents;
@@ -19,10 +21,10 @@ namespace Bamboo.Controller {
             setup_list();
             setup_addition();
 
-             for (int i = 0; i < 250; i++)
-             {
-                 this.documents.insert(@"Introduction to Burping $i", @"Burp $(i%10)", "10/10/2011");
-             }
+            for (int i = 0; i < 250; i++)
+            {
+                this.documents.insert(@"Introduction to Burping $i", @"Burp $(i%10)", "10/10/2011");
+            }
         }
 
         private void setup_categories()

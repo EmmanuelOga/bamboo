@@ -1,6 +1,7 @@
 using Gtk;
 
-int main (string[] args) {
+int main (string[] args)
+{
     Gtk.init (ref args);
 
     var main = new Bamboo.Controller.Main ();

@@ -75,8 +75,12 @@ namespace Bamboo.Model
         private string _previous_query;
 
         public string current_query {
-            get { return _current_query; }
-            set {
+            get
+            {
+                return _current_query;
+            }
+            set
+            {
                 _previous_query = _current_query;
                 _current_query = value;
                 try
