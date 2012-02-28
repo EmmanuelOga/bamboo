@@ -1,0 +1,36 @@
+Dialog gtkon:version=0.4 using=Gtk gtkaml:namespace="Bamboo.View" gtkaml:name="NewDocument" title="New Document" border-width=5 default-width=350 default-height=100
+
+  response=on_response destroy=Gtk.main_quit {
+
+    // Dialog already has a VBox named vbox (existing) and is already added to the Dialog (standalone)
+    Box spacing=10 gtkaml:existing=get_content_area() gtkaml:standalone {
+
+        Table n_rows=2 n_columns=2 !homogeneous row_spacing=20 {
+            Label with-mnemonic label="_Title" mnemonic-widget={doc_title} !expand left_attach="0" right_attach="1" top_attach="0" bottom_attach="1";
+            Entry $.doc_title expand left_attach="1" right_attach="2" top_attach="0" bottom_attach="1";
+
+            Label with-mnemonic label="_Category" mnemonic-widget={doc_category} !expand left_attach="0" right_attach="1" top_attach="1" bottom_attach="2";
+            ComboBox $.doc_category expand left_attach="1" right_attach="2" top_attach="1" bottom_attach="2";
+        }
+    }
+
+    -{
+        public NewDocument () {
+            add_button (Stock.CANCEL, ResponseType.CLOSE);
+            add_button (Stock.OK, ResponseType.OK);
+        }
+
+        private void on_response (Dialog source, int response_id) {
+            switch (response_id) {
+            case ResponseType.OK:
+                message("OK! Need to add the document now.");
+                break;
+
+            case ResponseType.CLOSE:
+                message("Sure.");
+                destroy ();
+                break;
+            }
+        }
+    }-
+}

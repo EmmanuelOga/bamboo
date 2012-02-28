@@ -21,9 +21,9 @@ namespace Bamboo.Controller
             setup_list();
             setup_addition();
 
-            for (int i = 0; i < 250; i++)
+            for (int i = 0; i < 9; i++)
             {
-                this.documents.insert(@"Introduction to Burping $i", @"Burp $(i%10)", "10/10/2011");
+                this.documents.insert(@"Introduction to Burping $i", @"Burp $(i%10)", "10/10/2011", "/some/path");
             }
         }
 
@@ -69,7 +69,11 @@ namespace Bamboo.Controller
                                                                                               Stock.CANCEL, ResponseType.CANCEL,
                                                                                               Stock.ADD,    ResponseType.ACCEPT);
                  if (file_chooser.run () == ResponseType.ACCEPT) {
-                     open_file (file_chooser.get_filename ());
+
+                    var dialog = new Bamboo.View.NewDocument ();
+                    dialog.show_all ();
+
+                    // open_file (file_chooser.get_filename ());
                  }
 
                  file_chooser.destroy ();
@@ -78,7 +82,8 @@ namespace Bamboo.Controller
 
         private void open_file (string filename)
         {
-            stderr.printf (filename);
+            int i = 2000;
+            this.documents.insert(filename, @"Burp $(i%10)", "10/10/2011", filename);
         }
     }
 }
