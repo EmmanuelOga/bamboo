@@ -1,36 +1,59 @@
 Dialog gtkon:version=0.4 using=Gtk gtkaml:namespace="Bamboo.View" gtkaml:name="NewDocument" title="New Document" border-width=5 default-width=350 default-height=100
-
-  response=on_response destroy=Gtk.main_quit {
+response=on_response modal {
 
     // Dialog already has a VBox named vbox (existing) and is already added to the Dialog (standalone)
     Box spacing=10 gtkaml:existing=get_content_area() gtkaml:standalone {
 
-        Table n_rows=2 n_columns=2 !homogeneous row_spacing=20 {
-            Label with-mnemonic label="_Title" mnemonic-widget={doc_title} !expand left_attach="0" right_attach="1" top_attach="0" bottom_attach="1";
-            Entry $.doc_title expand left_attach="1" right_attach="2" top_attach="0" bottom_attach="1";
+        Table n_columns=2 n_rows=3 !homogeneous row_spacing=20 {
+            Label $.message label="" !expand left_attach="0" right_attach="2" top_attach="0" bottom_attach="1";
 
-            Label with-mnemonic label="_Category" mnemonic-widget={doc_category} !expand left_attach="0" right_attach="1" top_attach="1" bottom_attach="2";
-            ComboBox $.doc_category expand left_attach="1" right_attach="2" top_attach="1" bottom_attach="2";
+            Label with-mnemonic label="_Title" mnemonic-widget={doc_title} !expand left_attach="0" right_attach="1" top_attach="1" bottom_attach="2";
+            Entry $.doc_title expand                                               left_attach="1" right_attach="2" top_attach="1" bottom_attach="2";
+
+            Label with-mnemonic label="_Category" mnemonic-widget={doc_category} !expand left_attach="0" right_attach="1" top_attach="2" bottom_attach="3";
+            ComboBoxText with_entry $.doc_category expand                                left_attach="1" right_attach="2" top_attach="2" bottom_attach="3";
         }
     }
 
     -{
-        public NewDocument () {
+        public NewDocument (Gee.HashSet<string> categories) {
+            // TODO better sharing of categories as a ListStire or TreeModel.
+            foreach (string title in categories)
+            {
+                if (title != "All") this.doc_category.append_text(title);
+            }
+
             add_button (Stock.CANCEL, ResponseType.CLOSE);
             add_button (Stock.OK, ResponseType.OK);
         }
 
         private void on_response (Dialog source, int response_id) {
             switch (response_id) {
-            case ResponseType.OK:
-                message("OK! Need to add the document now.");
-                break;
-
-            case ResponseType.CLOSE:
-                message("Sure.");
-                destroy ();
-                break;
+            case ResponseType.OK: process_entries(); break;
+            case ResponseType.CLOSE: destroy (); break;
             }
+        }
+
+        private void process_entries()
+        {
+            if (valid_entries())
+            {
+                add_document(this.doc_title.get_text(), this.doc_category.get_active_text());
+                destroy();
+            }
+            else
+            {
+                this.message.set_text("Please provide both title and category.");
+            }
+        }
+
+        public signal void add_document(string title, string category);
+
+        public bool valid_entries()
+        {
+            string title = this.doc_title.get_text();
+            string? cat = this.doc_category.get_active_text();
+            return title.length > 0 && cat.length > 0;
         }
     }-
 }

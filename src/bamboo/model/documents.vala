@@ -58,13 +58,15 @@ namespace Bamboo.Model
             }
         }
 
-        public void insert(string title, string category, string last_read, string path)
+        public void insert(string title, string category, string path)
         {
+            var now = new DateTime.now_local ();
+
             TreeIter iter;
             this.list.append (out iter);
             this.list.set (iter, Columns.TITLE, title,
                                  Columns.CATEGORY, category,
-                                 Columns.LAST_READ, last_read,
+                                 Columns.LAST_READ, now.to_string(),
                                  Columns.PATH, path);
             this.add_category(category);
         }
