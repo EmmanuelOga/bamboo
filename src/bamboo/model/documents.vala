@@ -4,6 +4,14 @@ namespace Bamboo.Model
 {
     public class Documents
     {
+        public enum Columns {
+            TITLE,
+            CATEGORY,
+            LAST_READ,
+            PATH,
+            LENGTH
+        }
+
         public ListStore       list;
         public TreeModelFilter filtered;
         public TreeModelSort   sorted;
@@ -15,7 +23,7 @@ namespace Bamboo.Model
 
         public Documents ()
         {
-            this.list     = new ListStore (4, typeof (string), typeof (string), typeof (string), typeof (string));
+            this.list     = new ListStore (Columns.LENGTH, typeof (string), typeof (string), typeof (string), typeof (string));
             this.filtered = new TreeModelFilter(list, null);
             this.sorted   = new TreeModelSort.with_model(filtered);
 
@@ -26,14 +34,14 @@ namespace Bamboo.Model
             filtered.set_visible_func((model, iter) => {
                 if (this.current_category != "All") {
                     string category;
-                    model.get(iter, 1, out category);
+                    model.get(iter, Columns.CATEGORY, out category);
                     if (this.current_category != category) return false;
                 }
 
                 if (this._current_regex == null) return true;
 
                 string title;
-                model.get(iter, 0, out title);
+                model.get(iter, Columns.TITLE, out title);
                 if (title.length == 0) return false;
                 return this._current_regex.match(title);
             });
@@ -50,11 +58,14 @@ namespace Bamboo.Model
             }
         }
 
-        public void insert(string title, string category, string last_read)
+        public void insert(string title, string category, string last_read, string path)
         {
             TreeIter iter;
             this.list.append (out iter);
-            this.list.set (iter, 0, title, 1, category, 2, last_read);
+            this.list.set (iter, Columns.TITLE, title,
+                                 Columns.CATEGORY, category,
+                                 Columns.LAST_READ, last_read,
+                                 Columns.PATH, path);
             this.add_category(category);
         }
 
