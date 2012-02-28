@@ -1,5 +1,6 @@
 module Ninja
-  class Config < Struct.new(:base_path, :src_glob, :out_path, :vapi_paths, :vala_package_names, :binary_name, :cc_flags, :valac_flags)
+  class Config < Struct.new(:base_path, :src_glob, :out_path, :vapi_paths, :vala_package_names, :binary_name, :cc_flags, :valac_flags, :valac_command)
+
     def initialize
       super; yield self
     end
@@ -110,9 +111,9 @@ module Ninja
         })
 
         out.puts "rule fastvapi"
-        out.puts "    description = valac fast vapi generation"
+        out.puts "    description = #{conf.valac_command} fast vapi generation"
         out.puts "    restat = true"
-        out.puts "    command = valac --fast-vapi=$out $in\n\n"
+        out.puts "    command = #{conf.valac_command} #{conf.valac_flags.join(" ")} #{conf.vala_package_params} --fast-vapi=$out $in\n\n"
 
         conf.each_path do |inpath|
           outpath = inpath.relative_to_out_path.with_extension("vapi")
@@ -133,9 +134,9 @@ module Ninja
         })
 
         out.puts "rule vala_to_c"
-        out.puts "    description = valac compilation to .c files"
+        out.puts "    description = #{conf.valac_command} compilation to .c files"
         out.puts "    restat = true"
-        out.puts "    command = valac #{conf.valac_flags.join(" ")} #{conf.vala_package_params} -C $in -d #{conf.out_path} $vapis"
+        out.puts "    command = #{conf.valac_command} #{conf.valac_flags.join(" ")} #{conf.vala_package_params} -C $in -d #{conf.out_path} $vapis"
 
         conf.each_path do |inpath|
           outpath = inpath.relative_to_out_path.with_extension("c")
