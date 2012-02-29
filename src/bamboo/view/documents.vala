@@ -37,13 +37,11 @@ namespace Bamboo.View {
             toolbar.set_style(ToolbarStyle.ICONS);
 
             this.add_button = new ToolButton.from_stock (Stock.ADD);
-            this.add_button.is_important = true; // Why?
             this.remove_button = new ToolButton.from_stock (Stock.REMOVE);
-            this.remove_button.is_important = true;
             this.edit_button = new ToolButton.from_stock (Stock.EDIT);
-            this.edit_button.is_important = true; // Why?
             this.open_button = new ToolButton.from_stock (Stock.OPEN);
-            this.open_button.is_important = true;
+
+            set_selection_tool_buttons_sensitive(false);
 
             toolbar.add (this.add_button);
             toolbar.add (this.remove_button);
@@ -51,6 +49,13 @@ namespace Bamboo.View {
             toolbar.add (this.open_button);
 
             return toolbar;
+        }
+
+        public void set_selection_tool_buttons_sensitive(bool sensitivity)
+        {
+            this.remove_button.sensitive = sensitivity;
+            this.edit_button.sensitive = sensitivity;
+            this.open_button.sensitive = sensitivity;
         }
 
         private Widget create_controls()
@@ -91,6 +96,19 @@ namespace Bamboo.View {
             col.set_resizable (true);
             col.set_expand (true);
         }
+
+        public delegate void SelectionCallback(bool presence, TreeModel? model, TreeIter? iter);
+
+        public void selected_row_iter(bool only_when_true, SelectionCallback cbk)
+        {
+            TreeModel model;
+            TreeIter iter;
+            var selection = this.list.get_selection();
+            bool presence = selection.get_selected(out model, out iter);
+
+            if (presence == true || only_when_true == false) cbk(presence, model, iter);
+        }
+
     }
 
 }

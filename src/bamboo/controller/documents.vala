@@ -20,6 +20,9 @@ namespace Bamboo.Controller
             setup_categories();
             setup_list();
             setup_addition();
+            setup_removal();
+            setup_edition();
+            setup_opening();
 
             for (int i = 0; i < 9; i++)
             {
@@ -60,6 +63,12 @@ namespace Bamboo.Controller
             });
 
             query_timeout.attach(null);
+
+            this.view.list.cursor_changed.connect(() => {
+                this.view.selected_row_iter(false, (present, model, iter) => {
+                    this.view.set_selection_tool_buttons_sensitive(present);
+                });
+            });
         }
 
         private void setup_addition()
@@ -81,7 +90,38 @@ namespace Bamboo.Controller
                  }
 
                  file_chooser.destroy ();
-             });
+            });
+        }
+
+        private void setup_removal()
+        {
+            this.view.remove_button.clicked.connect (() => {
+                this.view.selected_row_iter(true, (present, model, iter) => {
+                    model.row_deleted(model.get_path(iter));
+                });
+            });
+        }
+
+        private void setup_edition()
+        {
+            this.view.edit_button.clicked.connect (() => {
+                this.view.selected_row_iter(true, (present, model, iter) => {
+                    string title;
+                    model.get(iter, Bamboo.Model.Documents.Columns.TITLE, out title);
+                    message(@"Editing $title");
+                });
+            });
+        }
+
+        private void setup_opening()
+        {
+            this.view.open_button.clicked.connect (() => {
+                this.view.selected_row_iter(true, (present, model, iter) => {
+                    string title;
+                    model.get(iter, Bamboo.Model.Documents.Columns.TITLE, out title);
+                    message(@"Opening $title");
+                });
+            });
         }
 
         private void add_file (string title, string category, string filename)
