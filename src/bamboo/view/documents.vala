@@ -6,18 +6,51 @@ namespace Bamboo.View {
         public Gtk.Box          box;
         public Gtk.ComboBoxText categories;
         public Gtk.Entry        search;
-        public Gtk.ToolButton   add_button;
         public Gtk.TreeView     list;
+
+        public Gtk.ToolButton   add_button;
+        public Gtk.ToolButton   remove_button;
+        public Gtk.ToolButton   edit_button;
+        public Gtk.ToolButton   open_button;
 
         public Documents ()
         {
-            this.box = new Box (Orientation.VERTICAL, 0);
-            this.box.pack_start (create_controls(), false, true, 4);
-            this.box.pack_start (create_list(),     true,  true, 4);
+            var hbox = new Box (Orientation.VERTICAL, 0);
+            hbox.pack_start (create_controls(), false, true, 4);
+            hbox.pack_start (create_list(), true, true, 4);
+
+            this.box = new Box (Orientation.HORIZONTAL, 0);
+            this.box.pack_start (hbox, true, true, 2);
+            this.box.pack_start (create_toolbar(), false, true, 2);
 
             create_text_column(0, "Title");
             create_text_column(1, "Category");
             create_text_column(2, "Last Read");
+        }
+
+        private Toolbar create_toolbar()
+        {
+            var toolbar = new Toolbar ();
+            toolbar.get_style_context ();
+            toolbar.orientation = Orientation.VERTICAL;
+            toolbar.set_icon_size(IconSize.SMALL_TOOLBAR);
+            toolbar.set_style(ToolbarStyle.ICONS);
+
+            this.add_button = new ToolButton.from_stock (Stock.ADD);
+            this.add_button.is_important = true; // Why?
+            this.remove_button = new ToolButton.from_stock (Stock.REMOVE);
+            this.remove_button.is_important = true;
+            this.edit_button = new ToolButton.from_stock (Stock.EDIT);
+            this.edit_button.is_important = true; // Why?
+            this.open_button = new ToolButton.from_stock (Stock.OPEN);
+            this.open_button.is_important = true;
+
+            toolbar.add (this.add_button);
+            toolbar.add (this.remove_button);
+            toolbar.add (this.edit_button);
+            toolbar.add (this.open_button);
+
+            return toolbar;
         }
 
         private Widget create_controls()
@@ -26,17 +59,13 @@ namespace Bamboo.View {
             label.set_markup("<b>Filter</b>");
 
             this.search     = new Entry();
-            this.add_button = new ToolButton.from_stock (Stock.ADD);
             this.categories = new ComboBoxText();
-
-            this.add_button.is_important = true; // Why?
 
             var hbox = new Box (Orientation.HORIZONTAL, 0);
 
             hbox.pack_start (label      , false , true , 4);
             hbox.pack_start (search     , true  , true , 4);
             hbox.pack_start (categories , false , true , 4);
-            hbox.pack_start (add_button , false , true , 4);
 
             return hbox;
         }
