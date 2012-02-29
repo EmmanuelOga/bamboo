@@ -9,6 +9,7 @@ namespace Bamboo.Model
             CATEGORY,
             LAST_READ,
             PATH,
+            LAST_READ_DATE_TIME,
             LENGTH
         }
 
@@ -23,7 +24,7 @@ namespace Bamboo.Model
 
         public Documents ()
         {
-            this.list     = new ListStore (Columns.LENGTH, typeof (string), typeof (string), typeof (string), typeof (string));
+            this.list     = new ListStore (Columns.LENGTH, typeof (string), typeof (string), typeof (string), typeof (string), typeof(DateTime));
             this.filtered = new TreeModelFilter(list, null);
             this.sorted   = new TreeModelSort.with_model(filtered);
 
@@ -66,8 +67,9 @@ namespace Bamboo.Model
             this.list.append (out iter);
             this.list.set (iter, Columns.TITLE, title,
                                  Columns.CATEGORY, category,
-                                 Columns.LAST_READ, now.to_string(),
-                                 Columns.PATH, path);
+                                 Columns.LAST_READ, now.format("%x %X"),
+                                 Columns.PATH, path,
+                                 Columns.LAST_READ_DATE_TIME, now);
             this.add_category(category);
         }
 
