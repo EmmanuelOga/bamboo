@@ -17,7 +17,9 @@ namespace Bamboo.Controller
         public void run()
         {
             this.view.append_page ("Documents", this.documents.view.box);
+            //this.view.remove_pages();
             this.view.show_all ();
+            this.view.title = "Bamboo - Carozo y Narizota";
         }
 
     }

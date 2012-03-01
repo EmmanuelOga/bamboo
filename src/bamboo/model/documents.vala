@@ -2,17 +2,8 @@ using Gtk;
 
 namespace Bamboo.Model
 {
-    public class Documents
+    public class Documents : Object
     {
-        public enum Columns {
-            TITLE,
-            CATEGORY,
-            LAST_READ,
-            PATH,
-            LAST_READ_DATE_TIME,
-            LENGTH
-        }
-
         public ListStore       list;
         public TreeModelFilter filtered;
         public TreeModelSort   sorted;
@@ -24,27 +15,32 @@ namespace Bamboo.Model
 
         public Documents ()
         {
-            this.list     = new ListStore (Columns.LENGTH, typeof (string), typeof (string), typeof (string), typeof (string), typeof(DateTime));
+            this.list     = new ListStore (1, typeof(Bamboo.Model.Document));
             this.filtered = new TreeModelFilter(list, null);
             this.sorted   = new TreeModelSort.with_model(filtered);
+
+            this.sorted.set_sort_func(0, (_model, _iter_a, _iter_b) => {
+                Document doc_a; Document doc_b;
+                _model.get(_iter_a, 0, out doc_a);
+                _model.get(_iter_b, 0, out doc_b);
+                return doc_a.sort_compare_title(doc_b);
+            });
 
             this.categories = new Gee.HashSet<string>();
             add_category("All");
             this.previous_category = this.current_category = "All";
 
             filtered.set_visible_func((model, iter) => {
+                Document document;
+                model.get(iter, 0, out document);
+
                 if (this.current_category != "All") {
-                    string category;
-                    model.get(iter, Columns.CATEGORY, out category);
-                    if (this.current_category != category) return false;
+                    if (this.current_category != document.category) return false;
                 }
 
                 if (this._current_regex == null) return true;
-
-                string title;
-                model.get(iter, Columns.TITLE, out title);
-                if (title.length == 0) return false;
-                return this._current_regex.match(title);
+                if (document.title.length == 0) return false;
+                return this._current_regex.match(document.title);
             });
         }
 
@@ -61,15 +57,9 @@ namespace Bamboo.Model
 
         public void insert(string title, string category, string path)
         {
-            var now = new DateTime.now_local ();
-
             TreeIter iter;
             this.list.append (out iter);
-            this.list.set (iter, Columns.TITLE, title,
-                                 Columns.CATEGORY, category,
-                                 Columns.LAST_READ, now.format("%x %X"),
-                                 Columns.PATH, path,
-                                 Columns.LAST_READ_DATE_TIME, now);
+            this.list.set (iter, 0, new Document(title, category, path));
             this.add_category(category);
         }
 

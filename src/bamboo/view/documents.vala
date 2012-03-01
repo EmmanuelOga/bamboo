@@ -23,9 +23,42 @@ namespace Bamboo.View {
             this.box.pack_start (hbox, true, true, 2);
             this.box.pack_start (create_toolbar(), false, true, 2);
 
-            create_text_column(0, "Title");
-            create_text_column(1, "Category");
-            create_text_column(2, "Last Read");
+            append_column("Title", (_column, _cell, _model, _iter) => {
+                 Bamboo.Model.Document document;
+                 _model.get(_iter, 0, out document);
+                 (_cell as Gtk.CellRendererText).text = document.title;
+            });
+
+            append_column("Category", (_column, _cell, _model, _iter) => {
+                 Bamboo.Model.Document document;
+                 _model.get(_iter, 0, out document);
+                 (_cell as Gtk.CellRendererText).text = document.category;
+            });
+
+            append_column("Last Read", (_column, _cell, _model, _iter) => {
+                 Bamboo.Model.Document document;
+                 _model.get(_iter, 0, out document);
+                 (_cell as Gtk.CellRendererText).text = document.last_read.format("%x %X");
+            });
+        }
+
+        private void append_column(string title, CellLayoutDataFunc cell_data_func)
+        {
+            // http://www.mono-project.com/GtkSharp_TreeView_Tutorial
+            var col = new Gtk.TreeViewColumn ();
+            col.set_title(title);
+            col.set_resizable (true);
+            col.set_expand (true);
+            col.set_sizing(TreeViewColumnSizing.FIXED);
+
+            var cell = new Gtk.CellRendererText ();
+            col.pack_start (cell, true);
+
+            col.set_cell_data_func (cell, cell_data_func);
+
+            int pos = this.list.append_column (col) - 1;
+
+            col.set_sort_column_id (pos);
         }
 
         private Toolbar create_toolbar()
@@ -78,7 +111,7 @@ namespace Bamboo.View {
         private Widget create_list()
         {
             this.list = new Gtk.TreeView ();
-            this.list.fixed_height_mode = true;
+            //this.list.fixed_height_mode = true;
 
             var swin = new ScrolledWindow(null, null);
             swin.set_border_width(5);
@@ -86,15 +119,6 @@ namespace Bamboo.View {
             swin.add(this.list);
 
             return swin;
-        }
-
-        private void create_text_column(int position, string title)
-        {
-            this.list.insert_column_with_attributes (-1, title, new CellRendererText (), "text", position);
-            var col = this.list.get_column(position);
-            col.set_sort_column_id (position);
-            col.set_resizable (true);
-            col.set_expand (true);
         }
 
         public delegate void SelectionCallback(bool presence, TreeModel? model, TreeIter? iter);

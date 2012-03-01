@@ -1,4 +1,4 @@
-# Generated 2012-02-27 21:59:58 -0300
+# Generated 2012-03-01 02:37:29 -0300
 
 # __     __    _         _   _ _        _       _
 # \ \   / /_ _| | __ _  | \ | (_)_ __  (_) __ _| |
@@ -25,6 +25,7 @@ build _obj/src/bamboo/controller/main.vapi: fastvapi src/bamboo/controller/main.
 build _obj/src/bamboo/view/documents.vapi: fastvapi src/bamboo/view/documents.vala
 build _obj/src/bamboo/view/main.vapi: fastvapi src/bamboo/view/main.vala
 build _obj/src/bamboo/model/documents.vapi: fastvapi src/bamboo/model/documents.vala
+build _obj/src/bamboo/model/document.vapi: fastvapi src/bamboo/model/document.vala
 build _obj/src/main.vapi: fastvapi src/main.vala
 build _obj/src/bamboo/view/new_document.vapi: fastvapi src/bamboo/view/new_document.gtkon
 
@@ -46,12 +47,14 @@ build _obj/src/bamboo/controller/documents.c: vala_to_c src/bamboo/controller/do
                                                         _obj/src/bamboo/view/documents.vapi $
                                                         _obj/src/bamboo/view/main.vapi $
                                                         _obj/src/bamboo/model/documents.vapi $
+                                                        _obj/src/bamboo/model/document.vapi $
                                                         _obj/src/main.vapi $
                                                         _obj/src/bamboo/view/new_document.vapi
     vapis = --use-fast-vapi=_obj/src/bamboo/controller/main.vapi $
             --use-fast-vapi=_obj/src/bamboo/view/documents.vapi $
             --use-fast-vapi=_obj/src/bamboo/view/main.vapi $
             --use-fast-vapi=_obj/src/bamboo/model/documents.vapi $
+            --use-fast-vapi=_obj/src/bamboo/model/document.vapi $
             --use-fast-vapi=_obj/src/main.vapi $
             --use-fast-vapi=_obj/src/bamboo/view/new_document.vapi
 
@@ -62,12 +65,14 @@ build _obj/src/bamboo/controller/main.c: vala_to_c src/bamboo/controller/main.va
                                                    _obj/src/bamboo/view/documents.vapi $
                                                    _obj/src/bamboo/view/main.vapi $
                                                    _obj/src/bamboo/model/documents.vapi $
+                                                   _obj/src/bamboo/model/document.vapi $
                                                    _obj/src/main.vapi $
                                                    _obj/src/bamboo/view/new_document.vapi
     vapis = --use-fast-vapi=_obj/src/bamboo/controller/documents.vapi $
             --use-fast-vapi=_obj/src/bamboo/view/documents.vapi $
             --use-fast-vapi=_obj/src/bamboo/view/main.vapi $
             --use-fast-vapi=_obj/src/bamboo/model/documents.vapi $
+            --use-fast-vapi=_obj/src/bamboo/model/document.vapi $
             --use-fast-vapi=_obj/src/main.vapi $
             --use-fast-vapi=_obj/src/bamboo/view/new_document.vapi
 
@@ -78,12 +83,14 @@ build _obj/src/bamboo/view/documents.c: vala_to_c src/bamboo/view/documents.vala
                                                   _obj/src/bamboo/view/documents.vapi $
                                                   _obj/src/bamboo/view/main.vapi $
                                                   _obj/src/bamboo/model/documents.vapi $
+                                                  _obj/src/bamboo/model/document.vapi $
                                                   _obj/src/main.vapi $
                                                   _obj/src/bamboo/view/new_document.vapi
     vapis = --use-fast-vapi=_obj/src/bamboo/controller/documents.vapi $
             --use-fast-vapi=_obj/src/bamboo/controller/main.vapi $
             --use-fast-vapi=_obj/src/bamboo/view/main.vapi $
             --use-fast-vapi=_obj/src/bamboo/model/documents.vapi $
+            --use-fast-vapi=_obj/src/bamboo/model/document.vapi $
             --use-fast-vapi=_obj/src/main.vapi $
             --use-fast-vapi=_obj/src/bamboo/view/new_document.vapi
 
@@ -94,12 +101,14 @@ build _obj/src/bamboo/view/main.c: vala_to_c src/bamboo/view/main.vala | $
                                              _obj/src/bamboo/view/documents.vapi $
                                              _obj/src/bamboo/view/main.vapi $
                                              _obj/src/bamboo/model/documents.vapi $
+                                             _obj/src/bamboo/model/document.vapi $
                                              _obj/src/main.vapi $
                                              _obj/src/bamboo/view/new_document.vapi
     vapis = --use-fast-vapi=_obj/src/bamboo/controller/documents.vapi $
             --use-fast-vapi=_obj/src/bamboo/controller/main.vapi $
             --use-fast-vapi=_obj/src/bamboo/view/documents.vapi $
             --use-fast-vapi=_obj/src/bamboo/model/documents.vapi $
+            --use-fast-vapi=_obj/src/bamboo/model/document.vapi $
             --use-fast-vapi=_obj/src/main.vapi $
             --use-fast-vapi=_obj/src/bamboo/view/new_document.vapi
 
@@ -110,12 +119,32 @@ build _obj/src/bamboo/model/documents.c: vala_to_c src/bamboo/model/documents.va
                                                    _obj/src/bamboo/view/documents.vapi $
                                                    _obj/src/bamboo/view/main.vapi $
                                                    _obj/src/bamboo/model/documents.vapi $
+                                                   _obj/src/bamboo/model/document.vapi $
                                                    _obj/src/main.vapi $
                                                    _obj/src/bamboo/view/new_document.vapi
     vapis = --use-fast-vapi=_obj/src/bamboo/controller/documents.vapi $
             --use-fast-vapi=_obj/src/bamboo/controller/main.vapi $
             --use-fast-vapi=_obj/src/bamboo/view/documents.vapi $
             --use-fast-vapi=_obj/src/bamboo/view/main.vapi $
+            --use-fast-vapi=_obj/src/bamboo/model/document.vapi $
+            --use-fast-vapi=_obj/src/main.vapi $
+            --use-fast-vapi=_obj/src/bamboo/view/new_document.vapi
+
+
+build _obj/src/bamboo/model/document.c: vala_to_c src/bamboo/model/document.vala | $
+                                                  _obj/src/bamboo/controller/documents.vapi $
+                                                  _obj/src/bamboo/controller/main.vapi $
+                                                  _obj/src/bamboo/view/documents.vapi $
+                                                  _obj/src/bamboo/view/main.vapi $
+                                                  _obj/src/bamboo/model/documents.vapi $
+                                                  _obj/src/bamboo/model/document.vapi $
+                                                  _obj/src/main.vapi $
+                                                  _obj/src/bamboo/view/new_document.vapi
+    vapis = --use-fast-vapi=_obj/src/bamboo/controller/documents.vapi $
+            --use-fast-vapi=_obj/src/bamboo/controller/main.vapi $
+            --use-fast-vapi=_obj/src/bamboo/view/documents.vapi $
+            --use-fast-vapi=_obj/src/bamboo/view/main.vapi $
+            --use-fast-vapi=_obj/src/bamboo/model/documents.vapi $
             --use-fast-vapi=_obj/src/main.vapi $
             --use-fast-vapi=_obj/src/bamboo/view/new_document.vapi
 
@@ -126,6 +155,7 @@ build _obj/src/main.c: vala_to_c src/main.vala | $
                                  _obj/src/bamboo/view/documents.vapi $
                                  _obj/src/bamboo/view/main.vapi $
                                  _obj/src/bamboo/model/documents.vapi $
+                                 _obj/src/bamboo/model/document.vapi $
                                  _obj/src/main.vapi $
                                  _obj/src/bamboo/view/new_document.vapi
     vapis = --use-fast-vapi=_obj/src/bamboo/controller/documents.vapi $
@@ -133,6 +163,7 @@ build _obj/src/main.c: vala_to_c src/main.vala | $
             --use-fast-vapi=_obj/src/bamboo/view/documents.vapi $
             --use-fast-vapi=_obj/src/bamboo/view/main.vapi $
             --use-fast-vapi=_obj/src/bamboo/model/documents.vapi $
+            --use-fast-vapi=_obj/src/bamboo/model/document.vapi $
             --use-fast-vapi=_obj/src/bamboo/view/new_document.vapi
 
 
@@ -142,6 +173,7 @@ build _obj/src/bamboo/view/new_document.c: vala_to_c src/bamboo/view/new_documen
                                                      _obj/src/bamboo/view/documents.vapi $
                                                      _obj/src/bamboo/view/main.vapi $
                                                      _obj/src/bamboo/model/documents.vapi $
+                                                     _obj/src/bamboo/model/document.vapi $
                                                      _obj/src/main.vapi $
                                                      _obj/src/bamboo/view/new_document.vapi
     vapis = --use-fast-vapi=_obj/src/bamboo/controller/documents.vapi $
@@ -149,6 +181,7 @@ build _obj/src/bamboo/view/new_document.c: vala_to_c src/bamboo/view/new_documen
             --use-fast-vapi=_obj/src/bamboo/view/documents.vapi $
             --use-fast-vapi=_obj/src/bamboo/view/main.vapi $
             --use-fast-vapi=_obj/src/bamboo/model/documents.vapi $
+            --use-fast-vapi=_obj/src/bamboo/model/document.vapi $
             --use-fast-vapi=_obj/src/main.vapi
 
 
@@ -169,6 +202,7 @@ build _obj/src/bamboo/controller/main.o: ccobj _obj/src/bamboo/controller/main.c
 build _obj/src/bamboo/view/documents.o: ccobj _obj/src/bamboo/view/documents.c
 build _obj/src/bamboo/view/main.o: ccobj _obj/src/bamboo/view/main.c
 build _obj/src/bamboo/model/documents.o: ccobj _obj/src/bamboo/model/documents.c
+build _obj/src/bamboo/model/document.o: ccobj _obj/src/bamboo/model/document.c
 build _obj/src/main.o: ccobj _obj/src/main.c
 build _obj/src/bamboo/view/new_document.o: ccobj _obj/src/bamboo/view/new_document.c
 
@@ -183,4 +217,4 @@ rule ccbin
     description = cc main binary executable
     command = cc -g -DGSEAL_ENABLE -pthread -I/usr/include/gtk-3.0 -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/pango-1.0 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/pixman-1 -I/usr/include/freetype2 -I/usr/include/libpng15   -pthread -I/usr/include/gee-1.0 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include   -pthread -lgtk-3 -lgdk-3 -latk-1.0 -lgio-2.0 -lpangoft2-1.0 -lpangocairo-1.0 -lgdk_pixbuf-2.0 -lcairo-gobject -lcairo -lpango-1.0 -lfreetype -lfontconfig -lgobject-2.0 -lgmodule-2.0 -lgthread-2.0 -lrt -lglib-2.0   -pthread -lgee -lgobject-2.0 -lgthread-2.0 -lrt -lglib-2.0   $in -o $out
 
-build _obj/bamboo: ccbin _obj/src/bamboo/controller/documents.o _obj/src/bamboo/controller/main.o _obj/src/bamboo/view/documents.o _obj/src/bamboo/view/main.o _obj/src/bamboo/model/documents.o _obj/src/main.o _obj/src/bamboo/view/new_document.o | _obj/src/bamboo/controller/documents.o _obj/src/bamboo/controller/main.o _obj/src/bamboo/view/documents.o _obj/src/bamboo/view/main.o _obj/src/bamboo/model/documents.o _obj/src/main.o _obj/src/bamboo/view/new_document.o
+build _obj/bamboo: ccbin _obj/src/bamboo/controller/documents.o _obj/src/bamboo/controller/main.o _obj/src/bamboo/view/documents.o _obj/src/bamboo/view/main.o _obj/src/bamboo/model/documents.o _obj/src/bamboo/model/document.o _obj/src/main.o _obj/src/bamboo/view/new_document.o | _obj/src/bamboo/controller/documents.o _obj/src/bamboo/controller/main.o _obj/src/bamboo/view/documents.o _obj/src/bamboo/view/main.o _obj/src/bamboo/model/documents.o _obj/src/bamboo/model/document.o _obj/src/main.o _obj/src/bamboo/view/new_document.o

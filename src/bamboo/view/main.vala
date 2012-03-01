@@ -45,12 +45,14 @@ namespace Bamboo.View
 
             /* Create the File menu content. */
             var inew = new Gtk.ImageMenuItem.from_stock(Stock.NEW,  accelgroup);
+            var save = new Gtk.ImageMenuItem.from_stock(Stock.SAVE, accelgroup);
             var open = new Gtk.ImageMenuItem.from_stock(Stock.OPEN, accelgroup);
             var quit = new Gtk.ImageMenuItem.from_stock(Stock.QUIT, accelgroup);
 
             quit.activate.connect(Gtk.main_quit);
 
             filemenu.append(inew);
+            filemenu.append(save);
             filemenu.append(open);
             filemenu.append(quit);
 
@@ -76,5 +78,12 @@ namespace Bamboo.View
             var label = new Gtk.Label(title);
             this.notebook.append_page(widget, label);
         }
+
+        public void remove_pages()
+        {
+            while (this.notebook.get_n_pages() > 0)
+                this.notebook.remove_page(-1);
+        }
+
     }
 }

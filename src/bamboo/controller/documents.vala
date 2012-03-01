@@ -106,9 +106,9 @@ namespace Bamboo.Controller
         {
             this.view.edit_button.clicked.connect (() => {
                 this.view.selected_row_iter(true, (present, model, iter) => {
-                    string title;
-                    model.get(iter, Bamboo.Model.Documents.Columns.TITLE, out title);
-                    message(@"Editing $title");
+                    Bamboo.Model.Document document;
+                    model.get(iter, 0, out document);
+                    message(@"Opening $(document.title)");
                 });
             });
         }
@@ -117,9 +117,9 @@ namespace Bamboo.Controller
         {
             this.view.open_button.clicked.connect (() => {
                 this.view.selected_row_iter(true, (present, model, iter) => {
-                    string title;
-                    model.get(iter, Bamboo.Model.Documents.Columns.TITLE, out title);
-                    message(@"Opening $title");
+                    Bamboo.Model.Document document;
+                    model.get(iter, 0, out document);
+                    message(@"Opening $(document.title)");
                 });
             });
         }
