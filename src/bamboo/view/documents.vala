@@ -24,20 +24,17 @@ namespace Bamboo.View {
             this.box.pack_start (create_toolbar(), false, true, 2);
 
             append_column("Title", (_column, _cell, _model, _iter) => {
-                 Bamboo.Model.Document document;
-                 _model.get(_iter, 0, out document);
+                 Bamboo.Model.Document document; _model.get(_iter, 0, out document);
                  (_cell as Gtk.CellRendererText).text = document.title;
             });
 
             append_column("Category", (_column, _cell, _model, _iter) => {
-                 Bamboo.Model.Document document;
-                 _model.get(_iter, 0, out document);
+                 Bamboo.Model.Document document; _model.get(_iter, 0, out document);
                  (_cell as Gtk.CellRendererText).text = document.category;
             });
 
             append_column("Last Read", (_column, _cell, _model, _iter) => {
-                 Bamboo.Model.Document document;
-                 _model.get(_iter, 0, out document);
+                 Bamboo.Model.Document document; _model.get(_iter, 0, out document);
                  (_cell as Gtk.CellRendererText).text = document.last_read.format("%x %X");
             });
         }
@@ -132,7 +129,5 @@ namespace Bamboo.View {
 
             if (presence == true || only_when_true == false) cbk(presence, model, iter);
         }
-
     }
-
 }

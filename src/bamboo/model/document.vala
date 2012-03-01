@@ -20,7 +20,17 @@ namespace Bamboo.Model
 
         public int sort_compare_title(Bamboo.Model.Document other)
         {
-            return (this.title == other.title) ? 1 : (this.title < other.title ? -1 : 1);
+            return this.title.collate(other.title);
+        }
+
+        public int sort_compare_category(Bamboo.Model.Document other)
+        {
+            return this.category.collate(other.category);
+        }
+
+        public int sort_compare_last_read(Bamboo.Model.Document other)
+        {
+            return this.last_read.compare(other.last_read);
         }
     }
 }

@@ -20,10 +20,18 @@ namespace Bamboo.Model
             this.sorted   = new TreeModelSort.with_model(filtered);
 
             this.sorted.set_sort_func(0, (_model, _iter_a, _iter_b) => {
-                Document doc_a; Document doc_b;
-                _model.get(_iter_a, 0, out doc_a);
-                _model.get(_iter_b, 0, out doc_b);
+                Document doc_a; Document doc_b; _model.get(_iter_a, 0, out doc_a); _model.get(_iter_b, 0, out doc_b);
                 return doc_a.sort_compare_title(doc_b);
+            });
+
+            this.sorted.set_sort_func(1, (_model, _iter_a, _iter_b) => {
+                Document doc_a; Document doc_b; _model.get(_iter_a, 0, out doc_a); _model.get(_iter_b, 0, out doc_b);
+                return doc_a.sort_compare_category(doc_b);
+            });
+
+            this.sorted.set_sort_func(2, (_model, _iter_a, _iter_b) => {
+                Document doc_a; Document doc_b; _model.get(_iter_a, 0, out doc_a); _model.get(_iter_b, 0, out doc_b);
+                return doc_a.sort_compare_last_read(doc_b);
             });
 
             this.categories = new Gee.HashSet<string>();
