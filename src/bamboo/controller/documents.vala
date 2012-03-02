@@ -15,7 +15,7 @@ namespace Bamboo.Controller
         {
             this.main_controller = main_controller;
             this.documents = new Bamboo.Model.Documents();
-            this.view = new Bamboo.View.Documents();
+            this.view = new Bamboo.View.Documents(this.documents.sorted);
 
             setup_categories();
             setup_list();
@@ -53,7 +53,20 @@ namespace Bamboo.Controller
 
         private void setup_list()
         {
-            this.view.list.set_model (this.documents.sorted);
+            this.view.append_column("Title", (_column, _cell, _model, _iter) => {
+                 Bamboo.Model.Document document; _model.get(_iter, 0, out document);
+                 (_cell as Gtk.CellRendererText).text = document.title;
+            });
+
+            this.view.append_column("Category", (_column, _cell, _model, _iter) => {
+                 Bamboo.Model.Document document; _model.get(_iter, 0, out document);
+                 (_cell as Gtk.CellRendererText).text = document.category;
+            });
+
+            this.view.append_column("Last Read", (_column, _cell, _model, _iter) => {
+                 Bamboo.Model.Document document; _model.get(_iter, 0, out document);
+                 (_cell as Gtk.CellRendererText).text = document.last_read.format("%x %X");
+            });
 
             this.query_timeout = new TimeoutSource (500);
 

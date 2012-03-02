@@ -13,7 +13,7 @@ namespace Bamboo.View {
         public Gtk.ToolButton   edit_button;
         public Gtk.ToolButton   open_button;
 
-        public Documents ()
+        public Documents (TreeModel model)
         {
             var hbox = new Box (Orientation.VERTICAL, 0);
             hbox.pack_start (create_controls(), false, true, 4);
@@ -23,23 +23,10 @@ namespace Bamboo.View {
             this.box.pack_start (hbox, true, true, 2);
             this.box.pack_start (create_toolbar(), false, true, 2);
 
-            append_column("Title", (_column, _cell, _model, _iter) => {
-                 Bamboo.Model.Document document; _model.get(_iter, 0, out document);
-                 (_cell as Gtk.CellRendererText).text = document.title;
-            });
-
-            append_column("Category", (_column, _cell, _model, _iter) => {
-                 Bamboo.Model.Document document; _model.get(_iter, 0, out document);
-                 (_cell as Gtk.CellRendererText).text = document.category;
-            });
-
-            append_column("Last Read", (_column, _cell, _model, _iter) => {
-                 Bamboo.Model.Document document; _model.get(_iter, 0, out document);
-                 (_cell as Gtk.CellRendererText).text = document.last_read.format("%x %X");
-            });
+            this.list.set_model (model);
         }
 
-        private void append_column(string title, CellLayoutDataFunc cell_data_func)
+        public void append_column(string title, CellLayoutDataFunc cell_data_func)
         {
             // http://www.mono-project.com/GtkSharp_TreeView_Tutorial
             var col = new Gtk.TreeViewColumn ();
