@@ -94,7 +94,9 @@ namespace Bamboo.View
         public void remove_pages()
         {
             while (this.notebook.get_n_pages() > 0)
+            {
                 this.notebook.remove_page(-1);
+            }
         }
 
     }
