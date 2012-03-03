@@ -1,4 +1,5 @@
 using Gtk;
+using Bamboo;
 
 namespace Bamboo.Controller
 {
@@ -6,12 +7,10 @@ namespace Bamboo.Controller
     {
 
         public Bamboo.View.Main view;
-        public Bamboo.Controller.Documents documents;
 
         public Main()
         {
-            this.view = new Bamboo.View.Main ();
-
+            this.view = new View.Main (this);
             this.view.inew.activate.connect(this.new_library);
             this.view.save.activate.connect(this.save_all_libraries);
             this.view.open.activate.connect(this.open_library);
@@ -24,24 +23,46 @@ namespace Bamboo.Controller
             // Do nothing. Might be used to open last document or something in the future.
         }
 
-        public void new_library()
+        private Widget? current_tab()
         {
-            message("create a new lib.");
+            int page = view.notebook.get_current_page();
+            return view.notebook.get_nth_page(page);
         }
 
-        public void open_library()
+        private void new_library()
+        {
+            append_tab(new Controller.Documents (this).view, "New Library");
+        }
+
+        private void open_library()
         {
             message("open a lib.");
-            //this.documents = new Bamboo.Controller.Documents (this);
-            //this.view.append_page ("Documents", this.documents.view.box);
-            ////this.view.remove_pages();
-            //this.view.show_all ();
-            //this.view.title = "Bamboo - Carozo y Narizota";
         }
 
-        public void save_all_libraries()
+        private void save_all_libraries()
         {
-            message("save all libs.");
+            var tab = current_tab();
+
+            if (tab is Widget)
+            {
+                string kind;
+                tab.get("kind", out kind);
+
+                if (kind == "documents")
+                {
+                    ((tab as View.Documents).controller as Controller.Documents).save();
+                }
+                else
+                {
+                    message("Nothing to save.");
+                }
+            }
+        }
+
+        private void append_tab(Gtk.Widget widget, string title)
+        {
+            this.view.append_page (title, widget);
+            this.view.show_all ();
         }
     }
 }

@@ -1,9 +1,10 @@
 using Gtk;
 
 namespace Bamboo.View {
-    public class Documents {
+    public class Documents : Gtk.Box {
+        public Object controller { get; construct set; }
+        public string kind { get { return "documents"; } }
 
-        public Gtk.Box          box;
         public Gtk.ComboBoxText categories;
         public Gtk.Entry        search;
         public Gtk.TreeView     list;
@@ -13,15 +14,16 @@ namespace Bamboo.View {
         public Gtk.ToolButton   edit_button;
         public Gtk.ToolButton   open_button;
 
-        public Documents (TreeModel model)
+        public Documents (Object controller, TreeModel model)
         {
+            Object(controller: controller, orientation: Orientation.HORIZONTAL, spacing: 0);
+
             var hbox = new Box (Orientation.VERTICAL, 0);
             hbox.pack_start (create_controls(), false, true, 4);
             hbox.pack_start (create_list(), true, true, 4);
 
-            this.box = new Box (Orientation.HORIZONTAL, 0);
-            this.box.pack_start (hbox, true, true, 2);
-            this.box.pack_start (create_toolbar(), false, true, 2);
+            pack_start (hbox, true, true, 2);
+            pack_start (create_toolbar(), false, true, 2);
 
             this.list.set_model (model);
         }

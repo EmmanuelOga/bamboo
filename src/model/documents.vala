@@ -1,4 +1,5 @@
 using Gtk;
+using Bamboo;
 
 namespace Bamboo.Model
 {
@@ -15,7 +16,7 @@ namespace Bamboo.Model
 
         public Documents ()
         {
-            this.list     = new ListStore (1, typeof(Bamboo.Model.Document));
+            this.list     = new ListStore (1, typeof(Model.Document));
             this.filtered = new TreeModelFilter(list, null);
             this.sorted   = new TreeModelSort.with_model(filtered);
 

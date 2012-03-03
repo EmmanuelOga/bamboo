@@ -1,21 +1,28 @@
 using Gtk;
+using Bamboo;
 
 namespace Bamboo.Controller
 {
-    public class Documents
+    public class Documents : Object
     {
 
-        public Bamboo.Controller.Main main_controller;
-        public Bamboo.Model.Documents documents;
-        public Bamboo.View.Documents view;
+        public Controller.Main main_controller;
+        public Model.Documents documents;
+        public View.Documents view;
+
+        public bool save()
+        {
+            message("SAVING...");
+            return true;
+        }
 
         private TimeoutSource query_timeout;
 
-        public Documents(Bamboo.Controller.Main main_controller)
+        public Documents(Controller.Main main_controller)
         {
             this.main_controller = main_controller;
-            this.documents = new Bamboo.Model.Documents();
-            this.view = new Bamboo.View.Documents(this.documents.sorted);
+            this.documents = new Model.Documents();
+            this.view = new View.Documents(this, this.documents.sorted);
 
             setup_categories();
             setup_list();
@@ -23,11 +30,6 @@ namespace Bamboo.Controller
             setup_removal();
             setup_edition();
             setup_opening();
-
-            for (int i = 0; i < 9; i++)
-            {
-                this.documents.insert(@"Introduction to Burping $i", @"Burp $(i%10)", "/some/path");
-            }
         }
 
         private void setup_categories()
@@ -54,17 +56,17 @@ namespace Bamboo.Controller
         private void setup_list()
         {
             this.view.append_column("Title", (_column, _cell, _model, _iter) => {
-                 Bamboo.Model.Document document; _model.get(_iter, 0, out document);
+                 Model.Document document; _model.get(_iter, 0, out document);
                  (_cell as Gtk.CellRendererText).text = document.title;
             });
 
             this.view.append_column("Category", (_column, _cell, _model, _iter) => {
-                 Bamboo.Model.Document document; _model.get(_iter, 0, out document);
+                 Model.Document document; _model.get(_iter, 0, out document);
                  (_cell as Gtk.CellRendererText).text = document.category;
             });
 
             this.view.append_column("Last Read", (_column, _cell, _model, _iter) => {
-                 Bamboo.Model.Document document; _model.get(_iter, 0, out document);
+                 Model.Document document; _model.get(_iter, 0, out document);
                  (_cell as Gtk.CellRendererText).text = document.last_read.format("%x %X");
             });
 
@@ -93,7 +95,7 @@ namespace Bamboo.Controller
                  if (file_chooser.run () == ResponseType.ACCEPT) {
 
                     string filename = file_chooser.get_filename ();
-                    var dialog = new Bamboo.View.Document (this.documents.categories);
+                    var dialog = new View.Document (this, this.documents.categories);
 
                     dialog.add_document.connect((title, category) => {
                         add_file (title, category, filename);
@@ -119,7 +121,7 @@ namespace Bamboo.Controller
         {
             this.view.edit_button.clicked.connect (() => {
                 this.view.selected_row_iter(true, (present, model, iter) => {
-                    Bamboo.Model.Document document;
+                    Model.Document document;
                     model.get(iter, 0, out document);
                     message(@"Opening $(document.title)");
                 });
@@ -130,7 +132,7 @@ namespace Bamboo.Controller
         {
             this.view.open_button.clicked.connect (() => {
                 this.view.selected_row_iter(true, (present, model, iter) => {
-                    Bamboo.Model.Document document;
+                    Model.Document document;
                     model.get(iter, 0, out document);
                     message(@"Opening $(document.title)");
                 });

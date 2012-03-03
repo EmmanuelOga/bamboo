@@ -1,4 +1,4 @@
-Dialog gtkon:version=0.4 using=Gtk gtkaml:namespace="Bamboo.View" gtkaml:name="Document" title="New Document" border-width=5 default-width=350 default-height=100
+Dialog gtkon:version=0.4 using=Gtk using=Bamboo gtkaml:namespace="Bamboo.View" gtkaml:name="Document" title="New Document" border-width=5 default-width=350 default-height=100
 response=on_response modal {
 
     // Dialog already has a VBox named vbox (existing) and is already added to the Dialog (standalone)
@@ -16,7 +16,12 @@ response=on_response modal {
     }
 
     -{
-        public Document (Gee.HashSet<string> categories) {
+        public Object controller { get; construct set; }
+        public string kind { get { return "document"; } }
+
+        public Document (Object controller, Gee.HashSet<string> categories) {
+            Object(controller: controller);
+
             // TODO better sharing of categories as a ListStire or TreeModel.
             foreach (string title in categories)
             {

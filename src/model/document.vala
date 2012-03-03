@@ -1,4 +1,5 @@
 using Gtk;
+using Bamboo;
 
 namespace Bamboo.Model
 {
@@ -18,17 +19,17 @@ namespace Bamboo.Model
 
         public DateTime last_read;
 
-        public int sort_compare_title(Bamboo.Model.Document other)
+        public int sort_compare_title(Model.Document other)
         {
             return this.title.collate(other.title);
         }
 
-        public int sort_compare_category(Bamboo.Model.Document other)
+        public int sort_compare_category(Model.Document other)
         {
             return this.category.collate(other.category);
         }
 
-        public int sort_compare_last_read(Bamboo.Model.Document other)
+        public int sort_compare_last_read(Model.Document other)
         {
             return this.last_read.compare(other.last_read);
         }

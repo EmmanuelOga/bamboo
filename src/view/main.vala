@@ -4,6 +4,8 @@ namespace Bamboo.View
 {
     public class Main : Window
     {
+        public Object controller { get; construct set; }
+        public string kind { get { return "main"; } }
 
         public Gtk.MenuBar    menubar;
         public Gtk.AccelGroup accelgroup;
@@ -14,8 +16,10 @@ namespace Bamboo.View
         public Gtk.ImageMenuItem open;
         public Gtk.ImageMenuItem quit;
 
-        public Main()
+        public Main(Object controller)
         {
+            Object(controller: controller);
+
             this.title = "Bamboo";
             this.window_position = WindowPosition.CENTER;
             set_default_size (800, 600);
@@ -49,10 +53,13 @@ namespace Bamboo.View
             menubar.append(help);
 
             /* Create the File menu content. */
-            this.inew = new Gtk.ImageMenuItem.from_stock(Stock.NEW,  accelgroup);
+            this.inew = new Gtk.ImageMenuItem.with_mnemonic("_New Library");
             this.save = new Gtk.ImageMenuItem.from_stock(Stock.SAVE, accelgroup);
             this.open = new Gtk.ImageMenuItem.from_stock(Stock.OPEN, accelgroup);
             this.quit = new Gtk.ImageMenuItem.from_stock(Stock.QUIT, accelgroup);
+
+            inew.set_image(new Gtk.Image.from_stock(Stock.NEW, Gtk.IconSize.MENU));
+            inew.set_accel_group(accelgroup);
 
             quit.activate.connect(Gtk.main_quit);
 
