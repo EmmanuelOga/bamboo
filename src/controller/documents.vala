@@ -93,7 +93,7 @@ namespace Bamboo.Controller
                  if (file_chooser.run () == ResponseType.ACCEPT) {
 
                     string filename = file_chooser.get_filename ();
-                    var dialog = new Bamboo.View.NewDocument (this.documents.categories);
+                    var dialog = new Bamboo.View.Document (this.documents.categories);
 
                     dialog.add_document.connect((title, category) => {
                         add_file (title, category, filename);

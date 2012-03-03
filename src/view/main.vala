@@ -9,6 +9,11 @@ namespace Bamboo.View
         public Gtk.AccelGroup accelgroup;
         public Gtk.Notebook   notebook;
 
+        public Gtk.ImageMenuItem inew;
+        public Gtk.ImageMenuItem save;
+        public Gtk.ImageMenuItem open;
+        public Gtk.ImageMenuItem quit;
+
         public Main()
         {
             this.title = "Bamboo";
@@ -44,10 +49,10 @@ namespace Bamboo.View
             menubar.append(help);
 
             /* Create the File menu content. */
-            var inew = new Gtk.ImageMenuItem.from_stock(Stock.NEW,  accelgroup);
-            var save = new Gtk.ImageMenuItem.from_stock(Stock.SAVE, accelgroup);
-            var open = new Gtk.ImageMenuItem.from_stock(Stock.OPEN, accelgroup);
-            var quit = new Gtk.ImageMenuItem.from_stock(Stock.QUIT, accelgroup);
+            this.inew = new Gtk.ImageMenuItem.from_stock(Stock.NEW,  accelgroup);
+            this.save = new Gtk.ImageMenuItem.from_stock(Stock.SAVE, accelgroup);
+            this.open = new Gtk.ImageMenuItem.from_stock(Stock.OPEN, accelgroup);
+            this.quit = new Gtk.ImageMenuItem.from_stock(Stock.QUIT, accelgroup);
 
             quit.activate.connect(Gtk.main_quit);
 
