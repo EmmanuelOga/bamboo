@@ -15,6 +15,11 @@ namespace Bamboo.Controller
             this.view.save.activate.connect(this.save_all_libraries);
             this.view.open.activate.connect(this.open_library);
 
+            this.view.notebook.focus.connect(() => {
+                message("OK");
+                return true;
+            });
+
             this.view.show_all ();
         }
 

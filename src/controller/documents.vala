@@ -10,11 +10,7 @@ namespace Bamboo.Controller
         public Model.Documents documents;
         public View.Documents view;
 
-        public bool save()
-        {
-            message("SAVING...");
-            return true;
-        }
+        private string save_path;
 
         private TimeoutSource query_timeout;
 
@@ -86,6 +82,43 @@ namespace Bamboo.Controller
             });
         }
 
+        public bool save()
+        {
+            if (!FileUtils.test(this.save_path, FileTest.IS_REGULAR))
+            {
+                if (!stablish_save_path())
+                {
+                    message("save canceled");
+                    return false;
+                }
+            }
+
+            message(@"Actual save to: $save_path");
+
+            return true;
+        }
+
+        private bool stablish_save_path()
+        {
+            var file_chooser = new FileChooserDialog ("Open File", main_controller.view, FileChooserAction.SAVE,
+                                                                                         Stock.CANCEL, ResponseType.CANCEL,
+                                                                                         Stock.SAVE,   ResponseType.ACCEPT);
+            if (file_chooser.run () == ResponseType.ACCEPT) {
+                this.save_path = file_chooser.get_filename ();
+
+                if (!/.+\.bamboo$/.match(this.save_path))
+                {
+                    this.save_path = @"$save_path.bamboo";
+                }
+
+                file_chooser.destroy ();
+                return true;
+            }
+
+            file_chooser.destroy ();
+            return false;
+        }
+
         private void setup_addition()
         {
             this.view.add_button.clicked.connect (() => {
@@ -95,7 +128,19 @@ namespace Bamboo.Controller
                  if (file_chooser.run () == ResponseType.ACCEPT) {
 
                     string filename = file_chooser.get_filename ();
-                    var dialog = new View.Document (this, this.documents.categories);
+                    string tentative_title = filename;
+
+                    try
+                    {
+                        tentative_title = /\.pdf$/.replace(Path.get_basename(filename), -1, 0, "");
+                        tentative_title = /[^a-zA-Z0-9]/.replace(tentative_title, -1, 0, " ");
+                    }
+                    catch(GLib.RegexError e)
+                    {
+                        // Do nothing.
+                    }
+
+                    var dialog = new View.Document (this, tentative_title, this.documents.categories);
 
                     dialog.add_document.connect((title, category) => {
                         add_file (title, category, filename);

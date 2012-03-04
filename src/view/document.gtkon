@@ -19,7 +19,7 @@ response=on_response modal {
         public Object controller { get; construct set; }
         public string kind { get { return "document"; } }
 
-        public Document (Object controller, Gee.HashSet<string> categories) {
+        public Document (Object controller, string tentative_title, Gee.HashSet<string> categories) {
             Object(controller: controller);
 
             // TODO better sharing of categories as a ListStire or TreeModel.
@@ -27,6 +27,8 @@ response=on_response modal {
             {
                 if (title != "All") this.doc_category.append_text(title);
             }
+
+            this.doc_title.set_text(tentative_title);
 
             add_button (Stock.CANCEL, ResponseType.CLOSE);
             add_button (Stock.OK, ResponseType.OK);
